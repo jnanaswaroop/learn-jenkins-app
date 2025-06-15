@@ -29,7 +29,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    ls -la
+                    echo "Test stage"
                     npm test
                 '''
             }
