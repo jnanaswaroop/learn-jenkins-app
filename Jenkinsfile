@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     stages {
-        // This is a comment
-        /* This is a block
+        // This is a single line comment
+        /* This is a multiline comment block
         comment
 
         stage('Build') {
@@ -24,7 +24,7 @@ pipeline {
                 '''
             }
         }
-                */
+        */
         stage('Test') {
             agent {
                 docker {
@@ -36,7 +36,21 @@ pipeline {
                 sh '''
                     test -f build/index.html
                     npm test
-
+                '''
+            }
+        }
+        stage('E2E Test') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.53.0-noble'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm install -g serve
+                    serve -s build
+                    npx playwright test
                 '''
             }
         }
